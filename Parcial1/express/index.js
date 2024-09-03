@@ -1,16 +1,14 @@
 const express =require('express');
 const app = express();
-const cors = require('cors');
 
-
-
-// Usar cors
-app.use(cors()); 
+//se puso el CORS en comentario para probar que con un form y un iframe se puede saltar el CORS
+/* const cors = require('cors');
+app.use(cors());  */
 
  
 app.get('/', function (req, res, next) {
     res.json({msg: 'Server Express contestando a peticion get'})
-  })
+})
 /* app.get('/',(req,res)=>{
     res.send('')
 })

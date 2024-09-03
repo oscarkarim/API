@@ -23,6 +23,11 @@
     </script>
 </head>
 <body>
-    <button onclick="makeGetRequest()">peticion</button>
+    <form method="GET" target="resultado" action="http://localhost:3000">
+        <button id="btnpeticion" type="submit">peticionform</button>
+    </form>
+    <iframe name="resultado"></iframe>
+<br><br>
+    <button onclick="makeGetRequest()">peticionJS</button>
 </body>
 </html>
