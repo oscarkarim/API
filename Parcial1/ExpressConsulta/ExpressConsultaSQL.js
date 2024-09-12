@@ -27,21 +27,18 @@ const connection = mysql.createConnection({
   });
 
   app.get('/',cors(),(req, res)=>{
-    //console.log(req.query.id_producto)
     let consulta='';
-    if(typeof(req.query.id_producto)==='undefined'){
-        //si no se manda nada regresa la lista completa
-        consulta=`SELECT * FROM productos;`;
-    }
-    else{
-        //si recibe un id_producto regresa solo el producto correspondiente
-        consulta=`SELECT * FROM productos WHERE Id_Producto = ${req.query.id_producto}`;
-    }
-    //console.log(consulta)
+    consulta = (typeof(req.query.id_producto) === 'undefined' || req.query.id_producto === '') 
+    ? `SELECT * FROM productos;` 
+    : `SELECT * FROM productos WHERE Id_Producto = ${req.query.id_producto};`;
     connection.query(
         consulta,
         function (err, results, fields) {
-            //console.log(err);
+          if (err) {
+            res.json(err)
+            //next err invoca la funcion manejadora de errores
+            /* next(err) */
+          }  
           console.log(results); // results contains rows returned by server
           if(results.length==0){
             res.json({error:"no se encontro el producto"})
@@ -50,12 +47,85 @@ const connection = mysql.createConnection({
          // console.log(fields); // fields contains extra meta data about results, if available
         }
       );
+    });
+
+//post espera un json en el body
+//json ejemplo
+/* {
+  "id_producto": 102,
+  "marca": "Samsung",
+  "modelo": "Galaxy S21",
+  "precio": 799,
+  "color": "Negro",
+  "categoria": "Smartphones"
+  }*/
+
+app.post('/', cors(), (req, res) => {
+  const { id_producto, marca, modelo, precio, color, categoria } = req.body;
+
+  // valida que esten todos los campos
+  if (!id_producto || !marca || !modelo || !precio || !color || !categoria) {
+      return res.status(400).json({ error: "por favor llena todos los campos" });
+  }
+
+  // query
+  const insertQuery = `
+      INSERT INTO productos (Id_Producto, Marca, Modelo, Precio, Color, Categoria)
+      VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  // ejecutar query
+  connection.query(insertQuery, [id_producto, marca, modelo, precio, color, categoria], (err, results) => {
+      if (err) {
+          return res.status(500).json(err);
+      }
+
+      res.json({
+          message: "Producto agregado",
+          productId: results.insertId
+      });
+  });
 });
 
+//delete espera un json en el body
+//json ejemplo
+/* {
+  "id_producto": 102
+  }*/
+app.delete('/', (req, res) => {
+  const { id_producto } = req.body;
+
+  // revisar si se mando el id
+  if (!id_producto) {
+      return res.status(400).json({ error: "se requiere el ID de producto" });
+  }
+
+  // query
+  const deleteQuery = `DELETE FROM productos WHERE Id_Producto = ${id_producto}`;
+
+  // se ejecuta la query
+  connection.query(deleteQuery, (err, results) => {
+      if (err) {
+          return res.status(500).json(err);
+      }
+
+      // revisar si hubo filas afectadas
+      if (results.affectedRows === 0) {
+          return res.status(404).json({ error: "No se encontro el producto" });
+      }
+
+      res.json({
+          message: "Producto eliminado"
+      });
+  });
+});
 
 
 app.listen(3000,()=>{
     console.log('Server Express escuchando en puerto 3000')
 });
 
-
+//funcion manejadora de errores
+/* app.use((err,req,res,next)=>{
+  
+}) */
