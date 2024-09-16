@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<!-- Definición principal del WSDL. Aquí se describe el servicio web -->
+<wsdl:definitions name="StockQuote"
+             targetNamespace="http://example.com/stockquote.wsdl"
+             xmlns:tns="http://example.com/stockquote.wsdl"
+             xmlns:xsd1="http://example.com/stockquote.xsd"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <!-- Tipos de datos usados en el servicio. Estos son definidos en un esquema XML (XSD) -->
+    <wsdl:types>
+       <!-- Definir el esquema XSD que describe los elementos complejos usados en las solicitudes y respuestas -->
+       <xsd:schema targetNamespace="http://example.com/stockquote.xsd" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema">
+           
+           <!-- Definir el tipo de mensaje para la solicitud, llamado 'TradePriceRequest'. -->
+           <xsd:element name="TradePriceRequest">
+              <xsd:complexType>
+                  <xsd:all>
+                      <!-- Elemento que representará el símbolo de la acción (por ejemplo, 'AAPL') -->
+                      <xsd:element name="tickerSymbol" type="string"/>
+                  </xsd:all>
+              </xsd:complexType>
+           </xsd:element>
+
+           <!-- Definir el tipo de mensaje para la respuesta, llamado 'TradePrice'. -->
+           <xsd:element name="TradePrice">
+              <xsd:complexType>
+                  <xsd:all>
+                      <!-- Elemento que representará el precio de la acción como un valor de tipo 'float' -->
+                      <xsd:element name="price" type="float"/>
+                  </xsd:all>
+              </xsd:complexType>
+           </xsd:element>
+       </xsd:schema>
+    </wsdl:types>
+
+    <!-- Mensajes que envían y reciben los datos para el servicio SOAP -->
+
+    <!-- Mensaje de entrada: solicitud que contiene el símbolo bursátil ('tickerSymbol'). -->
+    <wsdl:message name="GetLastTradePriceInput">
+        <!-- La parte del mensaje que contiene el cuerpo (body), que se refiere al elemento 'TradePriceRequest' definido en el esquema XSD -->
+        <wsdl:part name="body" element="xsd1:TradePriceRequest"/>
+    </wsdl:message>
+
+    <!-- Mensaje de salida: respuesta que contiene el precio de la acción ('price'). -->
+    <wsdl:message name="GetLastTradePriceOutput">
+        <!-- La parte del mensaje que contiene el cuerpo (body), que se refiere al elemento 'TradePrice' definido en el esquema XSD -->
+        <wsdl:part name="body" element="xsd1:TradePrice"/>
+    </wsdl:message>
+
+    <!-- Definición de la interfaz del servicio (el conjunto de operaciones que ofrece) -->
+
+    <!-- 'portType' define las operaciones del servicio web. En este caso, una operación llamada 'GetLastTradePrice'. -->
+    <wsdl:portType name="StockQuotePortType">
+        <!-- La operación 'GetLastTradePrice' acepta un mensaje de entrada y devuelve un mensaje de salida. -->
+        <wsdl:operation name="GetLastTradePrice">
+           <!-- El mensaje de entrada es 'GetLastTradePriceInput' -->
+           <wsdl:input message="tns:GetLastTradePriceInput"/>
+           <!-- El mensaje de salida es 'GetLastTradePriceOutput' -->
+           <wsdl:output message="tns:GetLastTradePriceOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <!-- Enlace (binding) que define cómo se transportan los datos usando SOAP sobre HTTP -->
+    
+    <!-- El binding especifica el protocolo SOAP (en este caso, estilo 'document') y el transporte HTTP -->
+    <wsdl:binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <!-- Definición específica de la operación 'GetLastTradePrice' en el binding -->
+        <wsdl:operation name="GetLastTradePrice">
+           <!-- Especifica la acción SOAP que se usará para invocar la operación -->
+           <soap:operation soapAction="http://example.com/GetLastTradePrice"/>
+           <wsdl:input>
+               <!-- El cuerpo del mensaje de entrada se envía en formato literal (sin envoltura adicional) -->
+               <soap:body use="literal"/>
+           </wsdl:input>
+           <wsdl:output>
+               <!-- El cuerpo del mensaje de salida también se envía en formato literal -->
+               <soap:body use="literal"/>
+           </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <!-- Definición del servicio en sí -->
+    <wsdl:service name="StockQuoteService">
+        <!-- El puerto define una dirección específica donde se puede acceder al servicio -->
+        <wsdl:port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
+           <!-- La dirección donde el servicio está disponible. En este caso, en localhost en el puerto 15099 -->
+           <soap:address location="http://localhost:15099/stockquote"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
