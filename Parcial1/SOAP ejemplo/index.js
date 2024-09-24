@@ -29,7 +29,7 @@ var myService = {
 
 // Definir la ruta al archivo WSDL (Lenguaje de Descripción de Servicios Web)
 // WSDL define el contrato del servicio, incluyendo los métodos y mensajes usados en el servicio web SOAP.
-const wsdlPath = 'Parcial1\\SOAP ejemplo\\soap-nodejs\\stockquote.wsdl';
+const wsdlPath = 'Parcial1\\SOAP ejemplo\\stockquote.wsdl';
 
 // Leer el contenido del archivo WSDL en una variable de cadena
 // La variable 'xml' ahora contiene la definición XML del servicio SOAP.

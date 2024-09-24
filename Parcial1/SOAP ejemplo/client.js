@@ -10,7 +10,7 @@ var endpoint_url = 'http://127.0.0.1:8000/stockquote';
 
 // Definir los argumentos que se enviarán en la solicitud SOAP.
 var args = {
-  tickerSymbol: 'AAPL'
+  tickerSymbol: 'MSFT'
 };
 
 // Crear un cliente SOAP usando la URL WSDL.
