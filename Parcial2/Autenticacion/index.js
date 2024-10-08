@@ -3,6 +3,8 @@
 
   //middleware para autenticacion basica
   const basicAuth = require('express-basic-auth')
+
+  //usando el middleware
   //Requiere autenticacion basica aqui se ponen los usuarios y contrasenas
   var staticUserAuth = basicAuth({         
   users: {
