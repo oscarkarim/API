@@ -17,3 +17,18 @@ function areacirculo(radio) {
     return Math.PI * Math.pow(radio, 2);
 }
 module.exports.areatriangulo = areatriangulo;
+module.exports.areacirculo = areacirculo;
+
+/**
+ * this is MyClass.
+ */
+export default class MyClass {
+    /**
+     * @param {number} a - this is a value.
+     * @param {number} b - this is a value.
+     * @return {number} result of the sum value.
+     */
+    sum(a, b){
+      return a + b;
+    }
+  }
