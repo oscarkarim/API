@@ -6,7 +6,7 @@ const path = require('path');
 const swaggerOptions = require('./swaggerOptions.json');
 swaggerOptions.apis = [path.join(__dirname, 'index.js')];
 
-
+const port = process.env.PORT || 8082;
 
 
  
@@ -38,7 +38,7 @@ app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(swaggerDocs));
 app.post('/empleado', (req, res, next) => {
 });
 
-app.listen(3000,()=>{
-    console.log('Server Express escuchando en puerto 3000')
+app.listen(port,()=>{
+    console.log(`Server Express escuchando en puerto ${port}`)
 })
 
